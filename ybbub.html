@@ -4,7 +4,60 @@
   <meta charset="UTF-8">
   <title>Ybbub Portal</title>
   <style>
-   <body>
+    body {
+      background: radial-gradient(circle, #121212, #0a0a0a);
+      color: #ff79c6;
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .image-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .image-grid img {
+      width: 250px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .image-grid img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 25px rgba(255, 255, 255, 0.3);
+    }
+
+    #lightbox {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    #lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+      transition: 0.3s;
+    }
+  </style>
+</head>
+<body>
   <h1>🎀 Welcome BUBBY</h1>
   <p>Our personal museum.</p>
 
@@ -37,5 +90,4 @@
     });
   </script>
 </body>
-
 </html>
