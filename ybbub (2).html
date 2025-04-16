@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ybbub Vault</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <style>
+    body {
+      background-color: #0d1117;
+      color: #e4e4e4;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 6px;
+      font-size: 1rem;
+      border: none;
+    }
+    .caption {
+      font-size: 1.2rem;
+      color: #58a6ff;
+      margin-bottom: 20px;
+    }
+    img {
+      max-width: 100%;
+      width: 400px;
+      border-radius: 15px;
+      margin-top: 30px;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+    }
+    #error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔐 Enter Password to Access</h1>
+  <input type="password" id="pw" placeholder="Password">
+  <button onclick="decrypt()">Unlock</button>
+  <p id="error"></p>
+
+  <div id="vault" style="display: none;"></div>
+
+  
+<div id="lightbox" onclick="closeLightbox()" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000;">
+  <img id="lightbox-img" style="max-width:90%; max-height:90%; border-radius:12px; box-shadow:0 0 25px rgba(255,255,255,0.3);" />
+</div>
+
+<script>
+  function openLightbox(img) {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    lightboxImg.src = img.src;
+    lightbox.style.display = 'flex';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === "Escape") closeLightbox();
+  });
+</script>
+
+
+  <script>
+    const encryptedData = `KkYV/gxt01UFwozPKGP0rEAZK8wvNE8RB+QSYjzdgiMvDrtTSwP08RxgPPgpeEJZ0Ua4gDTbWLIZUNmMxcsaWs7Flzuk33RixzH5foDwIA+UjHP2WyJ3Qts3W71UtZHxktylQ+UkJ+dvcet96ojod+Sx0fNEpHvvu6Wc9zJuxR+QHXNec+yCZbYNb+tXSFjykYrJHvinb7ShJb4KRaYYFSfSQ5szV7E2KQBtq232ChliwZp6uvL0q6LYSw8LQadK+fSgOCB4pTZUKcTsKZc977zD2s/k1IDYFbiXklk4HlYdkBJ6j1djLiOyq6r2ndm7114OiDUnAGyL5sZQqYXPdQ8nYwY1Rn1q8LOhqJJQD0zgaNVi3H+FF/CSDEr+Ged5KeQSFebgLHcGUKj4q3E2zVKVi4g8b+70e6WlP/2vxwgyN9dNP6TRjCB7JKeWX61lh07CXQYuTBhodIr5km4sihtg/H7CEx5Y1pJ3SrrRSx4u3t4NE/k6VDxlCNnOeSSdqzI8ECKFdTGv8RKmYe7WV9tuk7ygIIeF/GeiWVCJCDfS+0wQB2AQdTL9lDBkgk6dP1N13gVNxrivrKibwzKSWjaynkg3m7dlHRjw8KhmoRnhTOxmR5+1I1H7e0HeLoU+UH+sK7t4VEHd/O7m10gKVH00eYnUu3SyvhguVNdclgn59KA4IHilNlQpxOwplz3vvMPaz+TUgNgVuJeSWTgeVtNwd6ZgywQ1rsjyPYJKIOFZedxSOmQpXkyRafHEyff3j0NvGb7zkRXk2CzehuW/CQ==`;
+
+    function decrypt() {
+      const pw = document.getElementById("pw").value;
+      try {
+        const key = CryptoJS.SHA256(pw);
+        const decrypted = CryptoJS.AES.decrypt(encryptedData, key, {
+          mode: CryptoJS.mode.ECB,
+          padding: CryptoJS.pad.Pkcs7
+        });
+        const plaintext = decrypted.toString(CryptoJS.enc.Utf8);
+        if (!plaintext) throw new Error("bad password");
+        document.getElementById("vault").innerHTML = plaintext;
+        document.getElementById("vault").style.display = "block";
+        document.querySelector("input").style.display = "none";
+        document.querySelector("button").style.display = "none";
+        document.querySelector("h1").style.display = "none";
+        document.getElementById("error").innerText = "";
+      } catch {
+        document.getElementById("error").innerText = "❌ Wrong password.";
+      }
+    }
+  </script>
+</body>
+</html>
