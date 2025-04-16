@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Encrypted Page</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <style>
+    body {
+      background-color: #0d1117;
+      color: #e4e4e4;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 6px;
+      font-size: 1rem;
+      border: none;
+    }
+    .caption {
+      font-size: 1.2rem;
+      color: #58a6ff;
+      margin-bottom: 20px;
+    }
+    img {
+      max-width: 100%;
+      width: 400px;
+      border-radius: 15px;
+      margin-top: 30px;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+    }
+    #error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔐 Enter Password to Access</h1>
+  <input type="password" id="pw" placeholder="Password">
+  <button onclick="decrypt()">Unlock</button>
+  <p id="error"></p>
+
+  <div id="vault" style="display: none;"></div>
+
+  <script>
+    const encryptedData = `ymPB0ryxuP8Lg8CH3tKuBz0S8t+cznyALF6zJ72kTWrY639EoLF9nX/FMMsXcdt3TwUCXP4pVVnOxoC8qC/i51/vEPGTomMMm9W/31F2pD+I7dfudzJ4JPDjUXNZiXs5GRB7gzWePKJJMTFxqhh5gkGIlbvfnmJ74ZHoBckQ+59GLzrGa/HlL8CpDvpdwnGoQ3npavKS24fqcznnh4M+NSiboxjVvYEtOhYh3D6sQSXw/P8EckIk7JKw2A+DDc6O2OOoBYVAOO15hQSAkx8W7rqrAfJ7gzlPDKqez56i0oxLThqKIbufPIVG9MQh5NNC1HUWwQXql07AU6bytgRYdUbSX6QM2gPdQu4kyIu5oMphflXNdnp/c0bdC2MHI0eH4fZg0Zd77UjWfQgs0ikbHnEAa22M3qVQnoOHHVmMGHUiIHRjdg2pt+BnoMCd9kWIny0Mt0d63OY08RH12nf2wWk7TbupdnNj1TfRVcrwY+6Hn4g9t0o7iT/Rl2NFVOKx+2C+GGhPAOAeKfFJAXIYP38Bqb+7w/kIjJef0hxCAW8=`;
+
+    function decrypt() {
+      const pw = document.getElementById("pw").value;
+      try {
+        const key = CryptoJS.SHA256(pw);
+        const decrypted = CryptoJS.AES.decrypt(encryptedData, key, {
+          mode: CryptoJS.mode.ECB,
+          padding: CryptoJS.pad.Pkcs7
+        });
+        const plaintext = decrypted.toString(CryptoJS.enc.Utf8);
+        if (!plaintext) throw new Error("bad password");
+        document.getElementById("vault").innerHTML = plaintext;
+        document.getElementById("vault").style.display = "block";
+        document.querySelector("input").style.display = "none";
+        document.querySelector("button").style.display = "none";
+        document.querySelector("h1").style.display = "none";
+        document.getElementById("error").innerText = "";
+      } catch {
+        document.getElementById("error").innerText = "❌ Wrong password.";
+      }
+    }
+  </script>
+</body>
+</html>
