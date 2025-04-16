@@ -2,27 +2,82 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Waleed</title>
-  <link rel="stylesheet" href="waleed.css">
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-89JQ8RNG5Y"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-89JQ8RNG5Y');
-  </script>
+  <title>Waleed's Vault</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <style>
+    body {
+      background-color: #0d1117;
+      color: #e4e4e4;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 6px;
+      font-size: 1rem;
+      border: none;
+    }
+
+    img {
+      max-width: 100%;
+      width: 400px;
+      border-radius: 15px;
+      margin-top: 30px;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+    }
+
+    .caption {
+      font-size: 1.2rem;
+      color: #58a6ff;
+      margin-bottom: 20px;
+    }
+
+    #error {
+      color: red;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <img src="waleed.jpeg" alt="Waleed sipping mint">
-    <p class="caption">certified cutie 🥒</p>
+  <h1>🔐 Enter Password to Access</h1>
+  <input type="password" id="pw" placeholder="Password">
+  <button onclick="decrypt()">Unlock</button>
+  <p id="error"></p>
 
-    <img src="tarun.jpeg" alt="The Long Receipt King">
-    <p class="caption">Tarun cool guy</p>
+  <div id="vault" style="display: none;"></div>
 
-    <img src="pinkzach.jpeg" alt="Pink Shirt Legend">
-    <p class="caption">pink zach</p>
-  </div>
+  <script>
+    const encryptedData = `iGyQyQl8GCzGRv/FOWY9rU0hDhOfq68YVAsZPhWQGTFj8loU/Rn9iahkJESQkRjhMcxH0Nz1T/2bYMsN3TsKNg0SxQtahxU5uzQkso/0RJmLPJMsITJXvAV6ZLZGoVSe11PI2x/d3ixH/Nznecqlezv4NFG4KjuZOkQKwTUlPGUsbTeXwBgEec+AR9OBQarRCqEL92pEglp6Qn6wDZSGBqnApS+sJwuX9QajGSfImLlvO/fruTDKRd5gHD7L5hVf9beF7KC7ArEwHEPSkqoVYu9gVlcC8MW7OndcMoLab/BwRSzkMD7CvhZpuZI0r0CJeLpRIhNmNPD25Hz4E/iRFsc+Xx/GWGjS23yQz4dl2wtUuFrC8ODYeA3W3yK9wa8i4ccJTkGK7nVUgvq5pPkMSgKs5kJrX9iFwCIdjO9OqQF79raLI+g3fWWqsPXD3oX6FPO13Uq9bbc+MS6UZ0LBlQ==`;
+
+    function decrypt() {
+      const pw = document.getElementById("pw").value;
+      try {
+        const key = CryptoJS.enc.Utf8.parse(pw.padEnd(32, '\0'));
+        const decrypted = CryptoJS.AES.decrypt(encryptedData, key, {
+          mode: CryptoJS.mode.ECB,
+          padding: CryptoJS.pad.Pkcs7
+        });
+        const plaintext = decrypted.toString(CryptoJS.enc.Utf8);
+        if (!plaintext) throw new Error("bad password");
+        document.getElementById("vault").innerHTML = plaintext
+          .replaceAll("team1.jpeg", "tarun.jpeg")
+          .replaceAll("team2.jpeg", "pinkzach.jpeg");
+        document.getElementById("vault").style.display = "block";
+        document.querySelector("input").style.display = "none";
+        document.querySelector("button").style.display = "none";
+        document.querySelector("h1").style.display = "none";
+        document.getElementById("error").innerText = "";
+      } catch {
+        document.getElementById("error").innerText = "❌ Wrong password.";
+      }
+    }
+  </script>
 </body>
 </html>
